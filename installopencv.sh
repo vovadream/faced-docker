@@ -20,12 +20,12 @@ OPENCV_VERSION='2.4.13.5'
  
  
 # 1. KEEP UBUNTU OR DEBIAN UP TO DATE
- 
+apt install -y dialog apt-utils  
 apt-get -y update
 apt-get -y upgrade
 apt-get -y dist-upgrade
 apt-get -y autoremove
-apt install -y dialog apt-utils 
+
  
 # 2. INSTALL THE DEPENDENCIES
  
