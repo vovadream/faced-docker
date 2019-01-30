@@ -23,7 +23,6 @@ OPENCV_VERSION='2.4.13.5'
 apt install -y dialog apt-utils  
 apt-get -y update
 apt-get -y upgrade
-apt-get -y dist-upgrade
 apt-get -y autoremove
 
  
