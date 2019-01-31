@@ -13,10 +13,12 @@ nginx:
  command: nginx -g "daemon off;" # Можно было указать в докер-фале, но можно и здесь)
  links:
   - fpm
+
 fpm:
  image: vovadream/vd:php7-fpm
  volumes:
   - ./php-code:/var/www:rw
+
 postgres:
  image: postgres:latest
  ports:
@@ -27,3 +29,11 @@ postgres:
   POSTGRES_PASSWORD: qazWSX123
   POSTGRES_USER: postgres
   PGDATA : /data/postgres
+
+faced:
+  image: vovadream/vd:faced
+  ports:
+  - 8085:8085
+  volumes 
+  - ./base:/home/face/base
+  - ./conf:/home/face
