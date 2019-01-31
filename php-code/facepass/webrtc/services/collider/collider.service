@@ -1,0 +1,13 @@
+[Unit]
+Description=AppRTC
+After=turnserver.service
+ 
+[Service]
+Type=forking
+ExecStart=/var/www/facepass/webrtc/services/collider/start.sh
+StandardOutput=null
+Restart=always
+ 
+[Install]
+WantedBy=multi-user.target
+Alias=collider.service

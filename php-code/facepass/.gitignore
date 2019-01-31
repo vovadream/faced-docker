@@ -1,0 +1,16 @@
+.idea/
+vendor/
+composer.lock
+composer.phar
+logs/
+uploads/documents
+uploads/user_photo
+uploads/other
+app/settings.php
+phinx.yml
+node_modules/
+package-lock.json
+app/src/module/ffserver/config/
+app/src/module/ffserver/logs/
+public/js/build.js
+public/css/main.css

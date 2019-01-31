@@ -1,0 +1,955 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SKUD API",
+    "description": "Методы центрального API для взаимодействия с оборудованием и терминалом.\\\nСпецификация ответов: http://labs.omniti.com/labs/jsend\\\nВ документации все примеры отправляются методом POST с Content-Type: application/x-www-form-urlencoded для удобства, можно также отправлять все запросы с Content-Type: application/json и телом запроса в формате json.",
+    "version": "0.3.1"
+  },
+  "host": "test.vovadream.ru",
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/api/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/configuration": {
+      "post": {
+        "description": "Отправка на сервер конфигурации устройства",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "mac",
+            "in": "formData",
+            "description": "MAC адрес",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "Тип устройства. Возможные значения - terminal, doorcontroller или checkpoint.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Для контроллера",
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail"
+          }
+        }
+      }
+    },
+    "/open/turnstile": {
+      "post": {
+        "description": "Запрос на открытие турникета\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "mark",
+            "in": "formData",
+            "description": "Значение кода, номер карты или console(при открытии с пульта)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "direction",
+            "in": "formData",
+            "description": "Направление - in|out|block",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "worker",
+            "in": "formData",
+            "description": "Работник ли это. 1 - да, 0 - нет.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "tags": [
+          "Для контроллера"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail. В data номер аудио записи для воспроизведения"
+          }
+        }
+      }
+    },
+    "/configuration/time": {
+      "get": {
+        "description": "Получение даты/времени с сервера",
+        "tags": [
+          "Для контроллера",
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "Вернёт время в формате dd.MM.YYYY HH:mm:ss"
+          }
+        }
+      }
+    },
+    "/log": {
+      "post": {
+        "description": "Логирование и сбор событий/уведомлений\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "Тип: notification, error или alert(тревога, мошейнические действия)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "message",
+            "in": "formData",
+            "description": "Текс уведомления",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail."
+          }
+        }
+      }
+    },
+    "/departments": {
+      "get": {
+        "description": "Получение иерархической структуры филиала. В ответе если есть параметр parent_id, то это департамент/отдел. В услугах нету параметра parent_id.",
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "Список департаментов, отделов"
+          }
+        }
+      }
+    },
+    "/request/help": {
+      "post": {
+        "description": "Запрос на помощь от посетителя. У устройства обязательно должна быть добавлена конфигурация, иначе выдаст ошибку(о том что устройство не найдено).",
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/request/compare": {
+      "post": {
+        "description": "Запрос для охранника на сравнение ручного ввода и скана паспорта",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "surname",
+            "in": "formData",
+            "description": "Фамилия",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "in": "formData",
+            "description": "Имя",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patronymic",
+            "in": "formData",
+            "description": "Отчество",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "formData",
+            "description": "Пол. Значения: 0 — неизвестно, 1 — мужчина, 2 — женщина",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "date_birth",
+            "in": "formData",
+            "description": "Дата рождения",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "birthplace",
+            "in": "formData",
+            "description": "Место рождения",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "Тип документа(в тестовой версии может быть только паспорт) = 1",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "series_number",
+            "in": "formData",
+            "description": "Серия и номер паспорта",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "passport_date",
+            "in": "formData",
+            "description": "Дата выдачи",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "passport_place",
+            "in": "formData",
+            "description": "Кем выдан",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "passport_code",
+            "in": "formData",
+            "description": "Код подразделения",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "registration_place",
+            "in": "formData",
+            "description": "Прописка",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "scans[]",
+            "in": "formData",
+            "description": "Массив сканов в base64",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success or fail"
+          }
+        }
+      }
+    },
+    "/request/compareface": {
+      "post": {
+        "description": "Запрос для охранника на сравнение фото и скана паспорта",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id_person",
+            "in": "formData",
+            "description": "ID персоны выданный сервером при подходе человека к терминалу",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "scan",
+            "in": "formData",
+            "description": "Скан страницы с фото в base64",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success or fail"
+          }
+        }
+      }
+    },
+    "/stream": {
+      "get": {
+        "description": "Запрос на получение стрима камеры",
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/request/makephoto": {
+      "post": {
+        "description": "Ручное фото(В разработке)",
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success. В секции data image в base64."
+          }
+        }
+      }
+    },
+    "/scanning": {
+      "post": {
+        "description": "Запрос на распознание скана(В разработке)\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "Тип документа(в тестовой версии может быть только паспорт) = 1",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "in": "formData",
+            "description": "Порядковая страница документа для сканирования. (1, 2 или 3 для паспорта)",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "Картинка в base64",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail. В секции data распознанные данные."
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "description": "Добавление посетителя\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id_person",
+            "in": "formData",
+            "description": "ID персоны выданный сервером при подходе человека к терминалу",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "surname",
+            "in": "formData",
+            "description": "Фамилия",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "in": "formData",
+            "description": "Имя",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patronymic",
+            "in": "formData",
+            "description": "Отчество",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "E-mail",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "formData",
+            "description": "Телефон",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "birthday",
+            "in": "formData",
+            "description": "Дата рождения",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "work_place",
+            "in": "formData",
+            "description": "Место работы",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "work_position",
+            "in": "formData",
+            "description": "Должность",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_photo",
+            "in": "formData",
+            "description": "Фотография пользователя base64",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail. При удаче в секции data вернёт идентификатор."
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "put": {
+        "description": "Обновление данных посетителя\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID посетителя",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "surname",
+            "in": "formData",
+            "description": "Фамилия",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "in": "formData",
+            "description": "Имя",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "patronymic",
+            "in": "formData",
+            "description": "Отчество",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "E-mail",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "formData",
+            "description": "Телефон",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "birthday",
+            "in": "formData",
+            "description": "Дата рождения",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "work_place",
+            "in": "formData",
+            "description": "Место работы",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "work_position",
+            "in": "formData",
+            "description": "Должность",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "user_photo",
+            "in": "formData",
+            "description": "Фотография пользователя base64",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail."
+          }
+        }
+      },
+      "get": {
+        "description": "Получение данных посетителя\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID посетителя",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success с данными о посетителе или fail."
+          }
+        }
+      }
+    },
+    "/user/{id}/document": {
+      "post": {
+        "description": "Добавление документа посетителя\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID посетителя",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "surname",
+            "in": "formData",
+            "description": "Фамилия",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "in": "formData",
+            "description": "Имя",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patronymic",
+            "in": "formData",
+            "description": "Отчество",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "formData",
+            "description": "Пол. Значения: 0 — неизвестно, 1 — мужчина, 2 — женщина",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "date_birth",
+            "in": "formData",
+            "description": "Дата рождения",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "birthplace",
+            "in": "formData",
+            "description": "Место рождения",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "Тип документа(в тестовой версии может быть только паспорт) = 1",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "series_number",
+            "in": "formData",
+            "description": "Серия и номер паспорта",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "passport_date",
+            "in": "formData",
+            "description": "Дата выдачи",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "passport_place",
+            "in": "formData",
+            "description": "Кем выдан",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "passport_code",
+            "in": "formData",
+            "description": "Код подразделения",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "registration_place",
+            "in": "formData",
+            "description": "Прописка",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "scans",
+            "in": "formData",
+            "description": "Массив сканов в base64",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail."
+          }
+        }
+      }
+    },
+    "/user/{id}/invitees": {
+      "get": {
+        "description": "Получение приглашений пользователя\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID посетителя",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "При успехе в секции data приглашения пользователя."
+          }
+        }
+      }
+    },
+    "/user/{id}/pass": {
+      "post": {
+        "description": "Получение пропуска для печати.\n Обязательно должен быть заполнен invitee_id или service_id.\n ",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID посетителя",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "invitee_id",
+            "in": "formData",
+            "description": "Идентификатор приглашения",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "service_id",
+            "in": "formData",
+            "description": "Идентификатор услуги",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail. При удаче в секции data вернёт нужные для печати данные и даные для отображение шагомера."
+          }
+        }
+      }
+    },
+    "/worker": {
+      "post": {
+        "description": "Добавление сотрудника\n",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id_person",
+            "in": "formData",
+            "description": "ID персоны выданный сервером при подходе человека к терминалу",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "surname",
+            "in": "formData",
+            "description": "Фамилия",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "in": "formData",
+            "description": "Имя",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "patronymic",
+            "in": "formData",
+            "description": "Отчество",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "in": "formData",
+            "description": "Код пропуска",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user_photo",
+            "in": "formData",
+            "description": "Фотография пользователя base64",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail. При удаче в секции data вернёт идентификатор."
+          }
+        }
+      }
+    },
+    "/close": {
+      "post": {
+        "description": "Закрытие сессии посетителем. Нужен для того чтобы системы наблюдения знали что пользователь нажал выход в главное меню.\n ",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail."
+          }
+        }
+      }
+    },
+    "/pass/{id_pass}/detector": {
+      "post": {
+        "description": "Отправка изображения с металлодетектора и ренгендетектора\n ",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id_pass",
+            "in": "path",
+            "description": "ID прохода, выданный в ответ на запрос открытия турникета",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "type",
+            "in": "formData",
+            "description": "Тип - 1 - металлодетектор, 2 - ренгендетектор",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "Фотография в base64",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "Для контроллера"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail."
+          }
+        }
+      }
+    },
+    "/marks/{who}": {
+      "get": {
+        "description": "Получение всех пропусков пользователей и работников\n",
+        "parameters": [
+          {
+            "name": "who",
+            "in": "path",
+            "description": "workers|users - возможные значения",
+            "required": true,
+            "type": "text"
+          }
+        ],
+        "tags": [
+          "Для контроллера"
+        ],
+        "responses": {
+          "200": {
+            "description": "При успехе в секции data[marks] приглашения пользователя."
+          }
+        }
+      }
+    },
+    "/debug/{ip}/{param}/{value}/": {
+      "post": {
+        "description": "Установка debug-параметров для различных устройств филиала.\n ",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "description": "Адресс конфигурирумого устройства",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "param",
+            "in": "path",
+            "description": "Конфигурируемый параметр устройства.\r\nДоступные параметры для конфигурации: ['debug', 'compare', 'compareface', 'scan', 'series_number', 'passport_date', 'passport_code', 'passport_place',            'registration_place', 'first_name', 'patronymic', 'gender', 'date_birth', 'birthplace', 'id_person', 'registration_place', 'verify' ]",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "description": "Значение конфигурирумого параметра устройства",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "Для терминала"
+        ],
+        "responses": {
+          "200": {
+            "description": "success или fail."
+          }
+        }
+      }
+    }
+  }
+}

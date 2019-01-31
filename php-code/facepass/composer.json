@@ -1,0 +1,13 @@
+{
+    "require": {
+        "php": "^7.0",
+        "slim/slim": "^3.0",
+        "akrabat/rka-ip-address-middleware": "0.5",
+        "guzzlehttp/guzzle": "6.3.0",
+        "monolog/monolog": "1.23.0",
+        "robmorgan/phinx": "^0.9.1"
+    },
+    "autoload": {
+        "psr-4": { "App\\": ["app/src/"] }
+    }
+}

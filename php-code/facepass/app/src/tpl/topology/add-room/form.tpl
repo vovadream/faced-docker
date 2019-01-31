@@ -1,0 +1,4 @@
+<form action="" name="add-room-form-topology-<?php echo $floor_id; ?>-<?php echo $departament_id; ?>" onsubmit="sendAjax('/topology/<?php echo $floor_id; ?>/<?php echo $departament_id; ?>/add/room/', 'POST', 'add-room-form-topology-<?php echo $floor_id; ?>-<?php echo $departament_id; ?>'); return false;">
+    <input type="text" name="name" id="add-room-form-topology-<?php echo $floor_id; ?>-<?php echo $departament_id; ?>-room-name" placeholder="Введите название Кабинета">
+    <div class="cancelAction" onclick="clearDiv('topologyHiddenForm_departament_<?php echo $floor_id; ?>_<?php echo $departament_id; ?>')">Отмена</div>
+</form>

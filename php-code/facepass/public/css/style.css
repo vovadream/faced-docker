@@ -1,0 +1,950 @@
+@font-face {
+	font-family: "RobotoCondensedRegular";
+	src: url("../fonts/RobotoCondensed/RobotoCondensedRegular/RobotoCondensedRegular.eot");
+	src: url("../fonts/RobotoCondensed/RobotoCondensedRegular/RobotoCondensedRegular.eot?#iefix")format("embedded-opentype"),
+	url("../fonts/RobotoCondensed/RobotoCondensedRegular/RobotoCondensedRegular.woff") format("woff"),
+	url("../fonts/RobotoCondensed/RobotoCondensedRegular/RobotoCondensedRegular.ttf") format("truetype");
+	font-style: normal;
+	font-weight: normal;
+}
+@font-face {
+	font-family: "RalewayRegular";
+	src: url("../fonts/RalewayRegular/RalewayRegular.eot");
+	src: url("../fonts/RalewayRegular/RalewayRegular.eot?#iefix")format("embedded-opentype"),
+	url("../fonts/RalewayRegular/RalewayRegular.woff") format("woff"),
+	url("../fonts/RalewayRegular/RalewayRegular.ttf") format("truetype");
+	font-style: normal;
+	font-weight: normal;
+}
+@font-face {
+	font-family: "RalewayBold";
+	src: url("../fonts/RalewayBold/RalewayBold.eot");
+	src: url("../fonts/RalewayBold/RalewayBold.eot?#iefix")format("embedded-opentype"),
+	url("../fonts/RalewayBold/RalewayBold.woff") format("woff"),
+	url("../fonts/RalewayBold/RalewayBold.ttf") format("truetype");
+	font-style: normal;
+	font-weight: normal;
+}
+@font-face {
+	font-family: "RalewayMedium";
+	src: url("../fonts/RalewayMedium/RalewayMedium.eot");
+	src: url("../fonts/RalewayMedium/RalewayMedium.eot?#iefix")format("embedded-opentype"),
+	url("../fonts/RalewayMedium/RalewayMedium.woff") format("woff"),
+	url("../fonts/RalewayMedium/RalewayMedium.ttf") format("truetype");
+	font-style: normal;
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: "RalewayBold";
+	src: url("../fonts/RalewayBold/RalewayBold.eot");
+	src: url("../fonts/RalewayBold/RalewayBold.eot?#iefix")format("embedded-opentype"),
+	url("../fonts/RalewayBold/RalewayBold.woff") format("woff"),
+	url("../fonts/RalewayBold/RalewayBold.ttf") format("truetype");
+	font-style: normal;
+	font-weight: normal;
+}
+
+html {
+	height:100%;
+}
+
+body {
+	min-height: 100%;
+}
+
+* {
+	font-size: 13px;
+	text-align: left;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin: 0;
+	position: relative;
+	font-family: "RalewayRegular";
+}
+
+/*form.authForm input{
+font-family: "RobotoCondensedRegular";
+}*/
+a {
+	color: #379be7;
+	text-decoration: none;
+}
+body
+{
+	width: 95%;
+	margin: 0 auto;
+
+}
+tbody{
+	text-align:center;
+}
+h2 {
+	color: #389be8;
+	font-size: 25px;
+}
+.overfl td {
+	text-align:center;
+	border: 1px solid #818486;
+}
+header{
+	margin-top: 7px;
+	font-family: "RalewayMedium";
+
+}
+table#tableIn th, table#tableOut th,.akkt th,.access-control-category table th {background:#818486; color:white;text-align: center;border-left: lightgrey;border: 1px solid;border-top: none;border-bottom: none;}
+table.full {width: 100%; border-spacing: 0;}
+table.full th {text-align: center; background-color: #8f9295;border-color: white; color: white; font-size: 16px;}
+table.full td {text-align: center;}
+table#tableIn td, table#tableOut td {text-align:center;	}
+.inline {display: inline-block;margin-left: 5%; margin-right: 20%;}
+.right {float: right;}
+table#tableIn th:last-child,.overfltable th:last-child,#access-control-category table th:last-child, table#tableOut th:last-child {border-right:none;}
+table#tableIn th:first-child,.overfltable th:first-child,table.full th:first-child,#access-control-category table th:first-child, table#tableOut th:first-child {border-left:none;}
+.tableinfo {width: 96%;border-spacing: 0; border: 1px solid #818486;}
+.button {
+	padding: 10px;
+	text-align: center;
+	display: inline-block;
+	cursor: pointer;
+	background: #379be7;
+	border-radius:5px;
+	color: white;
+	font-family: "RalewayMedium";
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	-ms-transition: 1s;
+	-o-transition: 1s;
+	transition: 1s;
+}
+
+.button.blueak {
+	width:150px;
+	background:rgb(74, 165, 233);
+	border:none;
+}
+.metkhead{
+	color:#379be7;
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+.button.grayak {
+	width:150px;
+	background: #41464a;
+	border:none;
+}
+.button.greenak {
+	width:150px;
+	background:rgb(58, 188, 61);
+	border:none;
+}
+.button.redak {
+	background:rgb(246, 33, 58)
+}
+.button.nocolor {
+	background:none;
+	border:1px solid rgb(246, 33, 58);
+	border-radius:5px;
+}
+.button.nocolor:hover {
+	background: white;
+}
+.button.nocolor a{
+	color:rgb(246, 33, 58);
+}
+#monitoring{
+	background-color: #ecedee;
+	padding: 10px;
+	min-height: 600px;
+}
+.monitors{
+	width:49%;
+	display:inline-block;
+	float: left;
+
+}
+.tablebl{
+	border-spacing: 6px;
+}
+div.menuItem a{
+	color:#818486;
+	font-family: "RalewayMedium";
+}
+div.menuItem a:hover {
+	color:#379be7;
+}
+.cameras{
+	width:49%;
+	display:inline-block;
+	padding-left: 5%;
+	border-left: 1px solid gray;
+}
+.userPhoto{
+	border: 1.5px solid #818486;
+
+}
+.userPhoto img {
+	max-width:100%;
+}
+.overfltable{
+	overflow:auto;
+	width: 100%;
+	margin-top:5px;
+
+}
+.polovina {
+	display: inline-block;
+	width: 49%;
+	height: 500px;
+	overflow: auto;
+	margin-top: 10px;
+	border: 1px solid;
+
+}
+
+.polov {
+	display: inline-block;
+	width: 49%;
+	margin-top: 10px;
+}
+
+#workschedulemake{
+	display: inline-block;
+	width: 49%;
+	overflow: auto;
+}
+
+
+#workscheduletopology{
+	margin-top:5px;
+}
+
+.overfltable th {
+	background: #818486;
+	color: white;
+	text-align: center;
+	border-left: lightgrey;
+	border: 1px solid;
+	border-top: none;
+	border-bottom: none;
+}
+.button.otst{
+	margin: 2px;
+}
+.overfltable td{
+
+	border: 1px solid #818486;
+	text-align:center;
+}
+.filtr{
+	width:110px;
+}
+.akkt{
+	font-family: "RobotoCondensedRegular";
+	border-spacing: 0;
+	width: 100%;
+	text-align: center;
+	border-color: #818486;
+}
+.overfl{
+	overflow:auto;
+	height:500px;
+	width: 100%;
+	border-right: 1.5px solid #818486;
+	margin-left: 1px;
+}
+.obchinfo,.tableniz{display:inline-block;}
+.tableniz{width: 52%;overflow: auto;vertical-align: middle;}
+#tableInUserInfo, #tableOutUserInfo { border:1.5px solid #818486;}
+.reng,.lotok{
+	display:block;
+	text-align: center;
+	font-size: 12px;
+	font-family: "RalewayBold";
+	color: #379be7;
+}
+.reng.ak,.lotok.ak{
+	display:table-cell;
+	text-align: center;
+	font-size: 12px;
+	padding:5px;
+	border-radius:5px;
+	font-family: "RalewayBold";
+	color: #379be7;
+	border:1px solid #818486;
+}
+
+.buttonsControl{
+	margin-bottom: 10px;
+}
+.buttonsControl.nomargin {margin-bottom:0;}
+
+.rentgen{max-width:100px;}
+.bordertd {
+	border: 1px solid #818486;
+}
+.borderpic {
+	border: 1.5px solid #818486;
+	display:inline-block;
+	width: 28%;
+	text-align: center;
+	margin-top: 10px;
+	margin-left: 1%;
+	vertical-align: middle;
+}
+.borderpic img {
+	max-width: 100%;
+
+}
+.obkart {
+	width: 19%;
+	display: inline-block;
+	vertical-align: middle;
+}
+.button.gray {
+	background: #41464a;
+}
+.otstup{
+	margin-right:5px;
+	margin-left: 3px;
+}
+.button:hover {
+	background: #818486;
+}
+
+.button.full {width: 100%; margin-bottom: 20px;}
+
+.tryam {
+	color:white;
+
+}
+.robotocr {
+	font-family: "RobotoCondensedRegular";
+	white-space: nowrap;
+}
+.ralewaybold{
+	font-family: "RalewayBold";
+}
+.ralewayreg {
+	font-family: "RalewayRegular";
+}
+.ralewaymed {
+	font-family: "RalewayMedium";
+}
+.ralewaymed.red {
+	color:#f6223b;
+}
+.
+.knopki {
+	display:inline-block;
+	padding: 5px;
+}
+.
+div.site-name {
+	background-color: #41464a;
+	text-align: center;
+	font-size: 20px;
+	color: white;
+	padding: 20px;
+}
+
+form.authForm, div.button.auth {
+	width: 400px;
+	margin: 0 auto;
+	display: block;
+}
+
+div.button.auth {
+	font-size: 20px;
+	color: white;
+	margin-bottom: 30px;
+	border-radius: 5px;
+}
+
+div.button.white, .button.white {
+	color: #379be7;
+	background-color: white;
+}
+div.button.white img {
+	max-width:40px;
+	vertical-align:middle;
+
+}
+.filexit {
+	display: inline-block;
+	float: right;
+}
+div.authName {
+	text-align: center;
+	color: #379be7;
+	font-family: "RalewayRegular";
+	font-size: 30px;
+	border-bottom: 3px solid #379be7;
+	width: 435px;
+	margin: 30px auto 30px auto;
+	padding-bottom: 20px;
+}
+
+div#authResult {
+	color: #ef2525;
+	width: 400px;
+	font-size: 20px;
+	margin: 0 auto 10px auto;
+}
+
+
+div.lostPassword {
+	display: block;
+	text-align: center;
+}
+
+div.lostPassword a {
+	font-size: 20px;
+	font-family: "RalewayMedium";
+}
+div.lostPassword a:hover{
+	border-bottom:1px solid;
+
+}
+form.authForm input {
+	width: 100%;
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 1.5px solid #818486;
+	border-radius: 3px;
+}
+
+div#popup {
+	display: none;
+	position: fixed;
+	top:0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	background: rgba(0,0,0,0.75);
+}
+.boryes{
+	border: 1px solid #818486;
+}
+.bornone{
+	border:none;
+	margin-right:5px;
+	margin-left:2px;
+
+}
+.poisktopology{
+	height: 37px;
+	width: 239px;
+	text-align:center;
+	border:1px solid #379be7;
+}
+
+div#nullaccountin, div#nullaccountout{
+	width: 49%;
+	display: inline-block;
+	float:left;
+	padding: 20px;
+}
+
+div#nullaccountin {
+	border-right: 1px solid #818486;
+}
+div#nullaccount {
+	display:table;
+	width:100%;
+	height:100%;
+	background-color: #ecedee;
+}
+
+.blackmeta{
+	color:black;
+
+}
+#AllNotifications{
+	background-color: #ecedee;
+	padding: 10px;
+}
+.akkt td{
+	border: 1px solid #818486;
+}
+#leftopology{
+	min-height: 500px;
+	border: 1px solid gray;
+	padding-left: 10px;
+    border: 1px solid black;
+}
+.statists{
+	width:65%;
+	overflow:auto;
+}
+.fixheight{
+	overflow:auto;
+}
+.margins {
+	margin-bottom:5px;
+	margin-top:5px;
+}
+
+#topologynavigation{
+	display:inline-block;
+	margin-top:10px;
+	width: 25%;
+}
+div#selectedtopologygroup{
+	display: inline-block;
+	width:73%;
+	float: right;
+	margin-left:10px;
+	height: 500px;
+}
+div#popupContent {
+	/*position: absolute;*/
+	display:inline-block;
+	max-height: 90%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	background: white;
+	border: 1px solid black;
+	box-shadow: 5px 5px 10px black;
+	overflow: auto;
+	padding: 50px 15px;
+}
+
+div#popupContent img {
+	border: 1px solid #666666;
+}
+
+div.popupClose {
+	position: absolute;
+	top:0;
+	right:0;
+	text-align: center;
+	z-index: 100;
+	background: #379be7;
+	width: 100%;
+	border-radius: 0;
+}
+
+div.popupClose .button-close {
+	float: right;
+}
+
+
+div.popupClose:hover {
+	background: #379be7;
+}
+
+.marginright {
+	margin-right:70px;
+}
+
+
+#userPass h1 {
+	font-size: 16px !important;
+	font-weight: 900;
+}
+
+#userPass h2 {
+	font-size: 18px !important;
+}
+
+#userPass table {
+	margin-top: 10px;
+}
+
+#userPass .img-td {
+	padding-right: 15px;
+}
+
+.mini-profile img {
+	vertical-align: top;
+}
+
+.mini-profile {
+	display: inline-block;
+	position: relative;
+	top: 10px;
+}
+
+.mini-profile .user-name{
+	width: 210px;
+	display: inline-block;
+}
+
+.mini-profile .user-name a {
+	display: block;
+}
+
+	/*div#mainMenu div.menuItem {
+        display: inline-block;
+        margin-right: 20px;
+    }*/
+
+div.menuItem{
+
+	text-align: center;
+	padding: 4px;
+	vertical-align: middle;
+	width: 5%;
+	border-radius: 5px;
+	border: 1.5px solid #818486;
+	display: table-cell;
+}
+
+
+div#mainMenu, div.advancedMenu {
+	display: inline-block;
+	width: 39%;
+	float:left;
+}
+
+div.advancedMenu {
+	float: right;
+	display: table;
+	border-spacing: 6px;
+	width:45%;
+}
+
+div#header:after {
+	content: ' ';
+	display: block;
+	clear: both;
+	border-bottom: 3px solid #389be8;
+
+
+}
+
+
+div.button.logout {display: inline-block; margin-top: 17px; float:right; font-size: 30px;border: 1.5px solid;vertical-align: middle; padding-right: 20px;}
+div.button.logout img.icon {max-height: 35px; margin-left: 10px; float: right;}
+div.advancedMenu div.menuItem {display: table-cell;font-family: "RalewayMedium"; color: #818486;border: 1.5px solid #818486; vertical-align: middle;text-align: center; width: 75px; margin-right:15px; border-radius: 5px; cursor: pointer;}
+div.advancedMenu div.menuItem:hover {color:#379be7;}
+div.advancedMenu div.menuItem.noborder {border: none;}
+
+div#tableInContent, div#tableOutContent {
+    display: inline-block;
+    width: 49%;
+    text-align:center;
+}
+
+div#tableInContent {float: left; background-color: white;}
+div#tableOutContent {float: right; background-color: white;}
+
+div#tableInContent.active {position: fixed; left: 0; top: 0; height: 100%;}
+div#tableOutContent.active {position: fixed; right: 0; top: 0; height: 100%;}
+
+div#tableInContent.active div.buttonsControl, div#tableInContent.active div#tableInUserInfo {display: none;}
+div#tableOutContent.active div.buttonsControl, div#tableOutContent.active div#tableOutUserInfo {display: none;}
+
+div#tableInContent.active  div.overfl, div#tableOutContent.active  div.overfl {height: 100%;}
+
+div#tableInRollUpButton, div#tableOutRollUpButton {position: absolute; top: 0; right: 0; display: none; z-index:10;}
+div#tableInContent.active  div#tableInRollUpButton, div#tableOutContent.active  div#tableOutRollUpButton {display: block;}
+
+
+table#tableIn, table#tableOut {width: 100%; border-spacing: 0; text-align:center;border-color: #818486;}
+table#tableIn tr, table#tableOut tr {cursor: pointer;}
+table#tableIn tr:hover, table#tableOut tr:hover {background-color: lightgray;}
+
+div.userProfile {
+	background-color: #ecedee;padding: 10px;
+}
+.userDataButtons{
+	margin-top:5px;
+}
+.logosk {
+	display:inline-block;
+	color: #41464a;
+	font-size: 32px;
+	width: 12%;
+	text-align:center;
+	margin-top: 33px;
+	margin-left: 12px;
+}
+div.tabButton {
+	display: inline-block;
+	cursor: pointer;
+	font-size: 20px;
+	color: #41464a;
+	padding: 20px 30px;
+}
+.active a {
+	color:#379be7;
+}
+.menuItem.active a{
+	color:#379be7;
+	font-family: "RalewayMedium";
+}
+div.tabButton.active {
+	background-color: #ecedee;
+	color: #379be7;
+}
+.blockheight,.blockweight{
+	width:100%;
+	display:inline-block;
+}
+.blockheight img{
+
+	max-height: 80px;
+}
+.otstupkn{
+	margin-right:10px;
+}
+.blockweight img{
+	width:17%;
+}
+#accessleft{
+	display: inline-block;
+	width: 35%;
+	border: 1.5px solid gray;
+	text-align: center;
+	border-radius: 5px;
+	padding: 17px;
+	float: left;
+	margin-top: 20px;
+}
+
+#accessleft div {padding: 5px;}
+
+#accessright {
+	display: inline-block;
+	width: 60%;
+	float: right;
+	margin-top: 20px;
+}
+
+.tableclass{
+	border-spacing: 0;
+	display:table;
+	border-spacing: 10px;
+}
+#access-control-category{
+	display: block;
+	width: 100%;
+
+	text-align: center;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+#access-control-category table th{
+	font-family: "RalewayRegular";
+}
+div.userData:after {content: ' '; display: block; clear: both;}
+div.userData div.userPhoto { display: inline-block;  margin-right: 20px;text-align: center;}
+div.userPhoto {width: 14.9%;}
+div#userDocuments {display: inline-block;float: right;width: 50%;}
+div#userInfo {display: inline-block;float: left;width: 50%;}
+div#userDocuments img{
+	margin-left:5px;
+	margin-bottom:5px;
+	max-width: 100%;
+
+	border:1px solid white;
+	display:inline-block;
+}
+
+.knverh{
+	width:100%;
+}
+
+#topology{
+	height:500px;
+	margin-top:10px;
+}
+
+#rengakk{
+	display:table;
+}
+
+div#worker_access:after {content: ' '; display: block; clear: both;}
+div#worker_access div#worker_departamens, div#worker_access div#worker_rooms {
+	display: inline-block;
+	width: 40%;
+}
+div#worker_access div#worker_departamens {float: left;}
+div#worker_access div#worker_rooms {float: right;}
+
+.topology {display: inline-block; height: 500px; float: left; border: 1px solid black; margin-right: 10px; width: 33%;  overflow: auto;}
+.topology_submenu {display: none;margin-left: 20px;z-index: 1; float: right;}
+.topology_submenu:hover {z-index: 2;}
+.topology_submenu .topology_menu {display: none; border: 1px solid deepskyblue; background-color: white;}
+.topology_submenu .topology_menu div {cursor: pointer; padding: 5px;}
+.topology_submenu .topology_menu div:hover {background: lightgray;}
+.topology_submenu .topology_menu_icon {display: inline-block; background: url('../images/icons/topology_menu_icon.jpg');width: 15px;height: 20px; background-size: contain; background-position: 50%;}
+.topology_submenu:hover .topology_menu {display: block;position: absolute;right: 0px;top: 19px;}
+.topology_item {cursor: pointer;}
+.topology_item .topology_item {margin-left: 10px;}
+.topology_item_name {padding: 5px;}
+.topology_item_name:hover {background-color: lightgray!important; color: black!important;}
+.topology_item_name.active {background: #379be7; color: white;}
+.topology_item_name button {margin-right:5px;}
+tr:hover .topology_submenu, .topology_item_name:hover .topology_submenu, .topology_item_name.active .topology_submenu {display: inline-block;}
+
+
+#workschedulebutton {display: inline-block;}
+div#accessleft div.typeName:hover {background: lightgray;}
+div#accessleft div {cursor: pointer;}
+
+.menuItem.green.active {border: 1.5px solid #31b834;}
+.menuItem.green.active a {color: #31b834;}
+
+.tableOutTrActive, .tableInTrActive {background: lightgray!important;}
+.accessDivActive {background: #379be7!important; color: white;}
+div.find {color: green;  font-weight:bold; display: inline-block;}
+
+iframe {width: 100%; min-height: 350px;}
+button.full {width: 100%;}
+
+.changeCell {
+	background-color: yellow;
+	cursor: pointer;
+}
+
+div.settingsMenu {
+	display: inline-block;
+	cursor: pointer;
+	float: left;
+	border: solid 1px #D3D3D3;
+	width: 25%;
+}
+
+div.settingsMenuTab {
+	display: inline-block;
+	cursor: pointer;
+	font-size: 16px;
+	width: 100%;
+	padding: 5px;
+}
+
+div.settingsMenuTab:hover {
+	background-color: lightgray;
+}
+
+div.settingsMenuTab.active {
+	background-color: #379be7!important;
+	color: white!important;;
+	width: 100%;
+}
+
+div.settingsContent
+{
+	float: right;
+	display: inline-block;
+	overflow:auto;
+	margin-top:5px;
+	width: 74%;
+	height: 500px;
+}
+
+#notify-count {
+	display: none;
+}
+#notify-count.active {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: #31b834;
+	color: #fff;
+	padding: 2px;
+	border-radius: 5px;
+	display: block;
+}
+tr.notify {
+	cursor: pointer;
+}
+tr.notify.new {
+	background-color: lightgray;
+}
+
+.site.gray {background-color: #ecedee; padding: 5px;}
+
+div#MonitoringTab:after {  display: block;  width: 100%;  content: ' ';  clear: both; }
+
+.tableHiddenRow {display: none;}
+.tableHiddenRow.show {display: table-row;}
+.hiddenFormDiv form input {width: 100%;}
+.content {background-color: #ecedee;}
+.manualTime.hide {display: none!important;}
+#logoimg {max-width: 100%;}
+tr .topology_submenu {position: absolute; right: 0; top: 0;}
+.cancelAction {font-size: 12px; color: red; padding: 5px; position: relative; right: 0; top: 0; z-index: 100; cursor: pointer;}
+
+.calendar {
+    display: inline-block;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    border-spacing: 0;
+    margin-right: 4%;
+    width: 21%;
+    height: 150px;
+}
+
+.changedCell.disabled {background: gray;}
+.changedCell.enabled {cursor: pointer;}
+.changedCell.enabled:hover {border: 1px solid red;}
+
+#topologySearchForm {display: inline-block;}
+@media screen and (max-width: 1900px){
+	.logosk{transform: translate(28%,0%);}
+}
+
+
+@media screen and (max-width: 1440px){
+.tablebl {border-spacing: 2px;}	/*.tablebl {border-spacing: 6px;}*/
+div.menuItem{padding:2px;}	/*div.menuItem{padding:4px;}*/
+div.menuItem a{font-size: 0.9em;}/*div.menuItem a{font-size: 1em;}*/
+.logosk{    width: 11%;}
+div#mainMenu{margin-top:4px;}
+div.button.logout{font-size: 1.5em;width: 137px;}
+div.button.logout img.icon{max-height: 25px;}
+}
+@media screen and (max-width: 1178px){
+	div#mainMenu{width: 100%;}
+	div.advancedMenu{width: 80%;}
+	.logosk{transform: none;width: 18%;}
+	 div.button.logout{font-size: 1.5em;}
+	 div.button.logout img.icon{max-height: 26px;}
+	 div#tableOutContent{ width: 100%;}
+	 div#tableInContent{width: 100%;}
+	 #accessright{width: 100%;}
+	 #accessleft{width:100%;}
+	 .statists{
+	width:100%;
+	
+}
+}
+@media screen and (max-width: 768px)
+{
+div#mainMenu{    margin-top: 5px;}
+div.menuItem{width: 33%;height:100px;display: inline-block;}	
+.logosk{width: 50%;transform: translate(50%,0%);	}
+div.advancedMenu {width: 100%;transform: translate(7%,0%);display: inline-block;}
+div.advancedMenu div.menuItem.noborder{width:45%;}
+div.advancedMenu div.menuItem{width: 27%; display: inline-block;}
+div.button.logout{width: 200px;transform: translate(-49%,0%);margin-bottom: 5px;}
+.monitors{width: 98%;}
+.cameras{width: 98%;}
+div.settingsMenu{width: 100%;}
+div.settingsContent{width:100%;}
+div#nullaccountin{width:100%;) }
+.statists{width:100%!important;}
+}
+
+@media screen and (max-width: 435px){
+form.authForm, div.button.auth{width: 300px;}}
+div.authName{width: 300px;}
+@media screen and (max-width: 375px)
+{
+div.advancedMenu div.menuItem.noborder{width: 40%;}	
+}
+
+
+.terminal-size {display: block; position: absolute; top: 10px; right: 10px; padding: 10px; z-index: 100;}
+div.terminal-screen {z-index: 100;}
+iframe.terminal-screen-frame {height: 100%;}
+

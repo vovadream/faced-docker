@@ -1,0 +1,29 @@
+nginx:
+ image: vovadream/vd:nginx
+ ports:
+  - 80:80
+  - 443:443
+ volumes:
+  - ./logs:/etc/logs/nginx
+ volumes_from:
+  - fpm:rw
+ environment:
+  - NGINX_HOST=localhost
+  - NGINX_PORT=80
+ command: nginx -g "daemon off;" # Можно было указать в докер-фале, но можно и здесь)
+ links:
+  - fpm
+fpm:
+ image: vovadream/vd:php7-fpm
+ volumes:
+  - ./php-code:/var/www:rw
+postgres:
+ image: postgres:latest
+ ports:
+  - 5432:5432 # Проброс портов для внешнего доступа 
+ volumes:
+  - ./database/postgres:/data/postgres
+ environment:
+  POSTGRES_PASSWORD: qazWSX123
+  POSTGRES_USER: postgres
+  PGDATA : /data/postgres

@@ -1,0 +1,4 @@
+ALTER USER postgres with encrypted password 'nbjeqPG775ax';
+CREATE USER mixtech911 WITH PASSWORD 'mix1910tech';
+CREATE USER papirnij WITH PASSWORD 'npsd#isi#ASD';
+

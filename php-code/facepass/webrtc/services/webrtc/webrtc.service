@@ -1,0 +1,13 @@
+[Unit]
+Description=WebAPI
+After=collider.service
+ 
+[Service]
+Type=forking
+ExecStart=/var/www/facepass/webrtc/services/webrtc/start.sh 
+StandardOutput=null
+Restart=always
+ 
+[Install]
+WantedBy=multi-user.target
+Alias=webrtc.service

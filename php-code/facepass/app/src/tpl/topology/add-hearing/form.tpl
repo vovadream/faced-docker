@@ -1,0 +1,4 @@
+<form action="" name="add-hearing-form-topology-<?php echo $room_id; ?>-<?php echo $worker_id; ?>" onsubmit="sendAjax('/topology/add/hearing/<?php echo $room_id; ?>/<?php echo $worker_id; ?>/', 'POST', 'add-hearing-form-topology-<?php echo $room_id; ?>-<?php echo $worker_id; ?>'); return false;">
+    <input type="text" name="name" id="add-hearing-form-topology-<?php echo $room_id; ?>-<?php echo $worker_id; ?>-hearing-name" placeholder="Введите название Услуги">
+    <div class="cancelAction" onclick="clearDiv('topologyHiddenForm_worker-<?php echo $room_id; ?>-<?php echo $worker_id; ?>')">Отмена</div>
+</form>

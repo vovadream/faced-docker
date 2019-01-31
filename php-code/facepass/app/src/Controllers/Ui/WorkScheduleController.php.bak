@@ -1,0 +1,645 @@
+<?php
+
+namespace App\Controllers\Ui;
+
+use App\Controllers\Controller;
+use App\Models\WorkScheduleModel;
+use Slim\Container;
+use Slim\Http\Request as Request;
+use Slim\Http\Response as Response;
+
+use PDO;
+
+class WorkScheduleController extends Controller
+{
+
+    /**
+     * AccountController constructor.
+     * @param Container $c
+     */
+    public function __construct(Container $c)
+    {
+        parent::__construct($c);
+        $this->db = $c->get('db');
+
+//        $this->userPass = $c->get('UserPassModel');
+//        $this->settings = $c->get('settings');
+//        $this->users = $c->get('UsersModel');
+//        $this->marks = $c->get('UserMarksModel');
+//        $this->workers = $c->get('WorkersModel');
+//        $this->workerDepartments = $c->get('WorkerDepartmentsModel');
+//        $this->workerRooms = $c->get('WorkerRoomsModel');
+//        $this->topology = $c->get('TopologyModel');
+    }
+
+    /*
+    * Вывод кнопки создания графика
+    * Return: JSON
+    */
+
+    public function showCreateWorkScheduleControl(Request $request, Response $response)
+    {
+        $id = $request->getAttribute('id');
+        $type = $request->getAttribute('type');
+        $category=$request->getAttribute('category');
+        $html = $this->showCreateWorkScheduleView($id,$type,$category);
+        $data['status'] = 'success';
+        $data['div'] = 'workschedulebutton';
+        $data['html'] = $html;
+        $response = $response->withJson($data);
+        return $response;
+    }
+
+    public function showCreateWorkScheduleView($id=null,$type=null,$category=null)
+    {
+        $HTML = "";
+        if($id==null && $type==null && $category==null) {
+            $HTML .= "<b style='color: red;'>Выберите в топологии нужную сущность.</b>";
+        } else {
+            $HTML .= "<div class='button'
+		onclick=\"sendAjax('/workschedule/create/{$id}/{$type}/{$category}/', 'POST','workScheduleCreateForm')\">Заполнить график</div>";
+        }
+        return $HTML;
+    }
+
+    /*
+    * Вывод вкладки графика работ для конкретного элемента топологии
+    * Return: HTML
+    */
+
+    public function showWorkScheduleControl(Request $request)
+    {
+        $html = tpl('header');
+        $id = $request->getAttribute('id');
+        $type = $request->getAttribute('type');
+        $category=$request->getAttribute('category');
+        $html .= $this->workScheduleView($id,$type,$category);
+        $html .= tpl('footer');
+        return $html;
+    }
+
+    /*
+    * Вывод формы выбора дат
+    * Return: JSON
+    */
+
+    public function showWorkScheduleStartEndDateControl(Request $request, Response $response)
+    {
+        $id = $request->getAttribute('id');
+        $html = $this->showWorkScheduleStartEndDateView($id);
+        $data['status'] = 'success';
+        $data['div'] = 'workschedulestartenddate';
+        $data['html'] = $html;
+        $response = $response->withJson($data);
+        return $response;
+    }
+
+    /*
+     * Вывод календаря в заданном диапазоне дат
+     * Return: JSON
+     */
+
+    public function showWorkScheduleCalendarControl(Request $request, Response $response)
+    {
+        $start = $request->getAttribute('start');
+        $end = $request->getAttribute('end');
+        $html = $this->showWorkScheduleCalendarView($start,$end);
+        $data['status'] = 'success';
+        $data['div'] = 'workschedulecalendar';
+        $data['html'] = $html;
+        $response = $response->withJson($data);
+        return $response;
+    }
+
+    /*
+    * Создание рабочего графика
+    * Return: JSON
+    */
+
+    public function createWorkScheduleControl(Request $request, Response $response)
+    {
+        $model = new WorkScheduleModel();
+        $data = $request->getParsedBody();
+        $id = $request->getAttribute('id');
+        $type = $request->getAttribute('type');
+        $category=$request->getAttribute('category');
+        $data = $model->createWorkScheduleModel($data,$id,$type,$category);
+        $response = $response->withJson($data);
+        return $response;
+    }
+
+    /*
+    * Изменение шаблона для услуги
+    * Return: JSON
+    */
+
+    public function updateHearingWeekTemplateControl(Request $request, Response $response)
+    {
+        $model = new WorkScheduleModel();
+        $data = $request->getParsedBody();
+        $hearing_id = $request->getAttribute('hearing_id');
+        $data = $model->updateHearingWeekTemplateModel($data,$hearing_id);
+        $response = $response->withJson($data);
+        return $response;
+    }
+
+    /*
+    * Отображение формы изменения шаблона для услуги
+    * Return: JSON
+    */
+
+    public function showUpdateHearingWeekTemplateControl(Request $request, Response $response)
+    {
+        $hearing_id = $request->getAttribute('hearing_id');
+        $html = $this->showDayTypesOnWeekFormView($hearing_id);
+        $data['status'] = 'success';
+        $data['div'] = 'popup';
+        $data['html'] = $html;
+        $response = $response->withJson($data);
+        return $response;
+    }
+
+    public function showWorkScheduleCalendarView($start=null,$end=null)
+    {
+        $HTML = "";
+        $startArray = explode("-", $start);
+        $endArray=explode("-", $end);
+        $startMonth = $startArray[1];
+        $endMonth = $endArray[1];
+        if ($startMonth <=$endMonth)
+        {
+            $year=date('Y');
+            for ($i=(int)$startMonth;$i<=$endMonth;$i++)
+            {
+                $HTML .="<input type='month' value='{$year}-";
+                if ($i<10) $HTML .="0";
+                $HTML .="{$i}'>";
+            }
+        }
+        return $HTML;
+    }
+
+    public function showDayTypesOnWeekFormView($hearing_id=null)
+    {
+        $model = new WorkScheduleModel();
+        $HTML="";
+        $hearing= $model->sendQuery("SELECT * FROM filial_rooms_hearing WHERE id='{$hearing_id}'");
+        $day_types=array('1'=>"Рабочий",'2'=>"Сокращенный",'3'=>"Выходной");
+        $HTML .= "<form id='DayTypesOnWeekForm'>";
+        $HTML .="<div id='topologyweekteplate'><br>";
+        $HTML .= "<h2>Изменение шаблона для услуги {$hearing[0]->name}</h2>";
+        $HTML .= "<table style='display: block;'>";
+        $HTML .= "<tbody>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>ПН</td>";
+        $HTML .= "<td><select name='daytype_monday'>";
+        for ($i=1;$i<count($day_types)+1;$i++)
+        {
+            $HTML .= "<option value='{$i}'";
+            if ($hearing[0]->monday_day_type==$i) $HTML .= " selected";
+            $HTML .= ">{$day_types[$i]}</option>";
+        }
+        $HTML .= "</select></td></tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ВТ</td>";
+        $HTML .= "<td><select name='daytype_tuesday'>";
+        for ($i=1;$i<count($day_types)+1;$i++)
+        {
+            $HTML .= "<option value='{$i}'";
+            if ($hearing[0]->tuesday_day_type==$i) $HTML .= " selected";
+            $HTML .= ">{$day_types[$i]}</option>";
+        }
+        $HTML .= "</select></td></tr>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>СР</td>";
+        $HTML .= "<td><select name='daytype_wednesday'>";
+        for ($i=1;$i<count($day_types)+1;$i++)
+        {
+            $HTML .= "<option value='{$i}'";
+            if ($hearing[0]->wednesday_day_type==$i) $HTML .= " selected";
+            $HTML .= ">{$day_types[$i]}</option>";
+        }
+        $HTML .= "</select></td></tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ЧТ</td>";
+        $HTML .= "<td><select name='daytype_thursday'>";
+        for ($i=1;$i<count($day_types)+1;$i++)
+        {
+            $HTML .= "<option value='{$i}'";
+            if ($hearing[0]->thursday_day_type==$i) $HTML .= " selected";
+            $HTML .= ">{$day_types[$i]}</option>";
+        }
+        $HTML .= "</select></td></tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ПТ</td>";
+        $HTML .= "<td><select name='daytype_friday'>";
+        for ($i=1;$i<count($day_types)+1;$i++)
+        {
+            $HTML .= "<option value='{$i}'";
+            if ($hearing[0]->friday_day_type==$i) $HTML .= " selected";
+            $HTML .= ">{$day_types[$i]}</option>";
+        }
+        $HTML .= "</select></td></tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>СБ</td>";
+        $HTML .= "<td><select name='daytype_saturday'>";
+        for ($i=1;$i<count($day_types)+1;$i++)
+        {
+            $HTML .= "<option value='{$i}'";
+            if ($hearing[0]->saturday_day_type==$i) $HTML .= " selected";
+            $HTML .= ">{$day_types[$i]}</option>";
+        }
+        $HTML .= "</select></td></tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ВС</td>";
+        $HTML .= "<td><select name='daytype_sunday'>";
+        for ($i=1;$i<count($day_types)+1;$i++)
+        {
+            $HTML .= "<option value='{$i}'";
+            if ($hearing[0]->sunday_day_type==$i) $HTML .= " selected";
+            $HTML .= ">{$day_types[$i]}</option>";
+        }
+        $HTML .= "</select></td></tr>";
+        $HTML .= "</tbody>";
+        $HTML .= "</table>";
+        $HTML .="</div>";
+        $HTML .= "<div class='polov'>";
+        $HTML .= "<br><b>Рабочие дни</b>";
+        $HTML .= "<table style='display: block;'>";
+        $HTML .= "<tbody>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>Начало приема</td>";
+        $HTML .= "<td><input name='pass_in_fullday' type='time' value='{$hearing[0]->pass_in_work_day}'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Окончание приема</td>";
+        $HTML .= "<td><input name='pass_out_fullday' type='time' value='{$hearing[0]->pass_out_work_day}'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Обед</td>";
+        $HTML .= "<td>С <input name='dinner_start_fullday' type='time' value='{$hearing[0]->dinner_start_work_day}'>
+		До <input name='dinner_end_fullday' type='time' value='{$hearing[0]->dinner_end_work_day}'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Вход сотрудника за</td>";
+        $HTML .= "<td><input name='pass_before_fullday' type='number' value='{$hearing[0]->pass_before_work_day}'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Выход сотрудника после</td>";
+        $HTML .= "<td><input name='pass_after_fullday' type='number' value='{$hearing[0]->pass_after_work_day}'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Блокировать печать пропусков за</td>";
+        $HTML .= "<td><input name='stop_print_fullday' type='number' value='{$hearing[0]->stop_print_work_day}'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Свободный вход/выход сотрудников</td>";
+        $HTML .= "<td><input name='freepass_fullday' type='checkbox'";
+        if ($hearing[0]->free_pass_work_day) $HTML .= " checked";
+        $HTML .= "></td>";
+        $HTML .= "</tr>";
+        $HTML .= "</tbody>";
+        $HTML .= "</table>";
+
+        $HTML .= "</div>";
+
+        $HTML .= "<div class='polov'><b>Сокращенные дни</b>";
+        $HTML .= "<table style='display: block;'>";
+        $HTML .= "<tbody>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>Начало приема</td>";
+        $HTML .= "<td><input name='pass_in_limitedday' type='time' value='{$hearing[0]->pass_in_short_day}'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Окончание приема</td>";
+        $HTML .= "<td><input name='pass_out_limitedday' type='time' value='{$hearing[0]->pass_out_short_day}'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Обед</td>";
+        $HTML .= "<td>С <input name='dinner_start_limitedday' type='time' value='{$hearing[0]->dinner_start_short_day}'>
+		До <input name='dinner_end_limitedday' type='time' value='{$hearing[0]->dinner_end_short_day}'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Вход сотрудника за </td>";
+        $HTML .= "<td><input name='pass_before_limitedday' type='number' value='{$hearing[0]->pass_before_short_day}'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Выход сотрудника после </td>";
+        $HTML .= "<td><input name='pass_after_limitedday' type='number' value='{$hearing[0]->pass_after_short_day}'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Блокировать печать пропусков за</td>";
+        $HTML .= "<td><input name='stop_print_limitedday' type='number' value='{$hearing[0]->stop_print_short_day}'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Свободный вход/выход сотрудников</td>";
+        $HTML .= "<td><input name='freepass_fullday_limitedday' type='checkbox'";
+        if ($hearing[0]->free_pass_short_day) $HTML .= " checked";
+        $HTML .= "></td></tr>";
+        $HTML .= "</tbody>";
+        $HTML .= "</table>";
+        $HTML .= "</div>";
+        $HTML .= "</form>";
+        $HTML .= "<div class='button'
+			onclick=\"sendAjax('/workschedule/weektemlateedit/{$hearing_id}/', 'POST','DayTypesOnWeekForm')\">Сохранить изменения</div>";
+        return $HTML;
+    }
+
+    public function showWorkScheduleStartEndDateView($id=null)
+    {
+        $HTML = "";
+        $currentYear = date('Y');
+        $date = DateTime::createFromFormat('d-m-Y', "01-01-{$currentYear}");
+        $currentDate = DateTime::createFromFormat('d-m-Y',  date('d-m-Y'));
+
+        //if ($id==1)
+        //{
+        $HTML .= "<div id='allDates'>";
+        $HTML .= "Заполнить график С ";
+        $HTML .= "<input type='date' name='start' value='{$currentYear}-01-01' onchange=\"sendAjax('/workschedule/calendar/'+start.value+'/'+end.value+'/', 'GET')\">";
+        $HTML .= " До ";
+        $HTML .= "<input type='date' name='end' value='{$currentYear}-12-31' onchange=\"sendAjax('/workschedule/calendar/'+start.value+'/'+end.value+'/', 'GET')\">";
+        $HTML .= "</div>";
+        //} else if($id==2) {
+        $monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+        $HTML .= "<div id='calendarDates' style='display: none;'>";
+        $HTML .= "<div>";
+        $HTML .= "<select name='dayType' id='dayType'>";
+        $HTML .= "<option value='0' data-color='transparent'>Убрать выделение</option>";
+        $HTML .= "<option value='1' data-color='red'>Рабочий день</option>";
+        $HTML .= "<option value='2' data-color='yellow'>Сокращенный день</option>";
+        $HTML .= "<option value='3' data-color='green'>Выходной день</option>";
+        $HTML .= "</select>";
+        $HTML .= "</div>";
+
+        while($date->format('Y')==$currentYear) {
+            $month = $date->format('m');
+            if($date->format('d')=="01") {
+                $HTML .= "<table class='calendar'>";
+                $HTML .= "<thead><tr><th colspan='7'>".$monthNames[$date->format('m')-1]."</th></tr></thead>";
+                $HTML .= "<thead>";
+                $HTML .= "<tr>";
+                $HTML .= "<th>Пн</th>";
+                $HTML .= "<th>Вт</th>";
+                $HTML .= "<th>Ср</th>";
+                $HTML .= "<th>Чт</th>";
+                $HTML .= "<th>Пт</th>";
+                $HTML .= "<th>Сб</th>";
+                $HTML .= "<th>Вс</th>";
+                $HTML .= "</tr>";
+                $HTML .= "</thead>";
+                $HTML .= "<tbody>";
+            }
+            $dayNum = date("N", mktime(0, 0, 0, $date->format('m'), $date->format('d'), $date->format('Y')));
+            if($date->format('d')=="01" || $dayNum==1) {
+                $HTML .= "<tr>";
+                for($i=1; $i<$dayNum; $i++)
+                    $HTML .= "<td class='changedCell disabled'>-</td>";
+            }
+            $HTML .= "<td";
+            if($currentDate<$date) {
+                $HTML .= " data-dayid='".$date->format('dmY')."' class='changedCell enabled' onclick=\"selectCalendarDay(this)\" ";
+            } else {
+                $HTML .= " class='changedCell disabled' ";
+            }
+            $HTML .= ">";
+            $HTML .= $date->format('j');
+            $HTML .= "<input id='formDay".$date->format('dmY')."' type='hidden' value='0' name='".$date->format('dmY')."'>";
+            $HTML .= "</td>";
+
+            $date->modify('+1 day');
+            if($month!=$date->format('m') || $dayNum==7) {
+                $HTML .= "</tr>";
+                if($month!=$date->format('m')) {
+                    $HTML .= "</tbody>";
+                    $HTML .= "</table>";
+                }
+            }
+        }
+
+        $HTML .= "</div>";
+        //}
+        return $HTML;
+    }
+
+    public function workScheduleView($id=null,$type=null,$category=null)
+    {
+        $model = new WorkScheduleModel();
+        $HTML = "";
+        $HTML .= "<div id='workscheduletopology' class='userData'>";
+        $HTML .= "<div class='buttonsControl'>";
+        $HTML .= "<b class='marginright'>Формирование графиков</b>";
+        $HTML .= "<form name='topologySearchForm' id='topologySearchForm' onsubmit=\"sendAjax('/topology/1/search/', 'POST', 'topologySearchForm'); return false;\">";
+        $HTML .= "<input class='poisktopology' type='text' name='name' placeholder='департамент/отдел/кабинет/график'>";
+        $HTML .= "<button class='button'>Поиск</button>";
+        $HTML .= "</form>";
+
+
+        $HTML .= "</div>";
+
+        $HTML .= "<div class='topology' id='leftopology'>";
+        $topology = $model->getTopologyModel();
+        //$HTML .= $this->printWorkScheduleTopologyView(0,$topology);
+        $HTML .= $this->printTopologyView(0,$topology, 1);
+        $HTML .= "</div>";
+        $HTML .= "<div id='workschedulemake' class='userData'>";
+
+        /*
+        $HTML .= "<div id='workschedulecalendar'>";
+        $year=date('Y');
+        for ($i=1;$i<13;$i++)
+        {
+        $HTML .="<input type='month' value='{$year}-";
+        if ($i<10) $HTML .="0";
+        $HTML .="{$i}'>";
+        }
+        $HTML .= "</div>";
+        */
+
+        $HTML .= "<div id='workschedulebutton'>";
+        $HTML .= $this->showCreateWorkScheduleView($id,$type,$category);
+        $HTML .= "</div>";
+
+        $HTML .= "<form id='workScheduleCreateForm'>";
+
+        $HTML .= "<b>Тип графика: </b>";
+        $HTML .= "<select name='workscheduletypeselect' class='marginright' onchange=\"divSlide(null, 'body', '#allDates'); divSlide(null, 'body', '#calendarDates');\">";
+        $HTML .= "<option value='1' selected>Недельный</option>";
+        $HTML .= "<option value='2'>Скользящий</option>";
+        $HTML .= "</select>";
+        $HTML .= "<div id='workschedulestartenddate'>";
+        $HTML .= $this->showWorkScheduleStartEndDateView();
+        $HTML .= "</div>";
+
+        $HTML .="<input type='radio' name='template_type' value='automatic' checked onchange=\"divSlide(this, '#manualTime', '.manualTime'); event.stopPropagation();\">Автоматический";
+        $HTML .="<input type='radio' name='template_type' value='manual' onchange=\"divSlide(this, '#manualTime', '.manualTime'); event.stopPropagation();\">Ручной<br>";
+
+
+        $HTML .= "<div id='manualTime'>";
+        $HTML .= "<div class='polov manualTime' style='display: none;'>";
+        $HTML .= "<br><b>Рабочие дни</b>";
+        $HTML .= "<table style='display: block;'>";
+        $HTML .= "<tbody>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>Начало приема</td>";
+        $HTML .= "<td><input name='pass_in_fullday' type='time' value='08:00'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Окончание приема</td>";
+        $HTML .= "<td><input name='pass_out_fullday' type='time' value='16:00'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Обед</td>";
+        $HTML .= "<td>С <input name='dinner_start_fullday' type='time' value='12:00'> До <input name='dinner_end_fullday' type='time' value='13:00'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Вход сотрудника за</td>";
+        $HTML .= "<td><input name='pass_before_fullday' type='number' value='60'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Выход сотрудника после</td>";
+        $HTML .= "<td><input name='pass_after_fullday' type='number' value='90'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Блокировать печать пропусков за</td>";
+        $HTML .= "<td><input name='stop_print_fullday' type='number' value='15'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Свободный вход/выход сотрудников</td>";
+        $HTML .= "<td><input name='freepass_fullday' type='checkbox' checked></td>";
+        $HTML .= "</tr>";
+        $HTML .= "</tbody>";
+        $HTML .= "</table>";
+
+        /*$HTML .="<br>Перерыв начиная с <input name='pause_from_fullday' type='time' value='10:00'>";
+		$HTML .="<br>длительность <input name='pause_duration_fullday' type='time' value='00:15'>";
+		$HTML .="<br>интервал <input name='pause_interval_fullday' type='time' value='02:00'>";
+		*/
+
+        $HTML .= "</div>";
+
+        $HTML .= "<div class='polov manualTime' style='display: none;'><b>Сокращенные дни</b>";
+        $HTML .= "<table style='display: block;'>";
+        $HTML .= "<tbody>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>Начало приема</td>";
+        $HTML .= "<td><input name='pass_in_limitedday' type='time' value='09:00'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Окончание приема</td>";
+        $HTML .= "<td><input name='pass_out_limitedday' type='time' value='16:00'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Обед</td>";
+        $HTML .= "<td>С <input name='dinner_start_limitedday' type='time' value='12:00'> До <input name='dinner_end_limitedday' type='time' value='13:00'></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Вход сотрудника за </td>";
+        $HTML .= "<td><input name='pass_before_limitedday' type='number' value='60'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Выход сотрудника после </td>";
+        $HTML .= "<td><input name='pass_after_limitedday' type='number' value='90'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Блокировать печать пропусков за</td>";
+        $HTML .= "<td><input name='stop_print_limitedday' type='number' value='15'> мин.</td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>Свободный вход/выход сотрудников</td>";
+        $HTML .= "<td><input name='freepass_fullday_limitedday' type='checkbox' checked></td>";
+        $HTML .= "</tr>";
+        /*$HTML .="<br>Перерыв начиная с <input name='pause_from_limitedday' type='time' value='10:00'>";
+        $HTML .="<br>длительность <input name='pause_duration_limitedday' type='time' value='00:15'>";
+        $HTML .="<br>интервал <input name='pause_interval_limitedday' type='time' value='02:00'>";*/
+        $HTML .= "</tbody>";
+        $HTML .= "</table>";
+        $HTML .= "</div>";
+
+        $HTML .= "<div class='manualTime' style='display: none;'>";
+        $HTML .= "<table>";
+        $HTML .= "<tbody>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>ПН</td>";
+        $HTML .= "<td><select name='daytype_monday'><option value='1'>Рабочий день</option>
+					<option value='2'>Сокращенный день</option><option value='3'>Выходной день</option></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ВТ</td>";
+        $HTML .= "<td><select name='daytype_tuesday'><option value='1'>Рабочий день</option>
+					<option value='2'>Сокращенный день</option><option value='3'>Выходной день</option></td>";
+        $HTML .= "</tr>";
+        $HTML .= "<tr>";
+        $HTML .= "<td>СР</td>";
+        $HTML .= "<td><select name='daytype_wednesday'><option value='1'>Рабочий день</option>
+					<option value='2'>Сокращенный день</option><option value='3'>Выходной день</option></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ЧТ</td>";
+        $HTML .= "<td><select name='daytype_thursday'><option value='1'>Рабочий день</option>
+					<option value='2'>Сокращенный день</option><option value='3'>Выходной день</option></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ПТ</td>";
+        $HTML .= "<td><select name='daytype_friday'><option value='1'>Рабочий день</option>
+					<option value='2' selected>Сокращенный день</option><option value='3'>Выходной день</option></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>СБ</td>";
+        $HTML .= "<td><select name='daytype_saturday'><option value='1'>Рабочий день</option>
+					<option value='2'>Сокращенный день</option><option value='3' selected>Выходной день</option></td>";
+        $HTML .= "</tr>";
+
+        $HTML .= "<tr>";
+        $HTML .= "<td>ВС</td>";
+        $HTML .= "<td><select name='daytype_sunday'><option value='1'>Рабочий день</option>
+					<option value='2'>Сокращенный день</option><option value='3' selected>Выходной день</option></td>";
+        $HTML .= "</tr>";
+        $HTML .= "</tbody>";
+        $HTML .= "</table>";
+        $HTML .= "</div>";
+        $HTML .= "</div>";
+
+        $HTML .="</div>";
+        /*
+        $HTML .= "<br><br><b>Неприемные дни</b>";
+        $HTML .= "<br><br><b>Выходные дни</b>";
+        */
+        $HTML .= "</form>";
+        $HTML .= "</div>";
+        return $HTML;
+    }
+}
