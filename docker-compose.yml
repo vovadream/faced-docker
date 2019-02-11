@@ -30,10 +30,14 @@ postgres:
   POSTGRES_USER: postgres
   PGDATA : /data/postgres
 
-faced:
-  image: vovadream/vd:faced
-  ports:
+facedetect:
+ dockerfile: ./Dockerfile # путь до докер файла указываем относительно директории в build
+ build: ./containers/faced
+ ports:
   - 8085:8085
-  volumes 
+ volumes: 
+#  - ./face_method6.6:/home/face 
+#  - ./conf:/home/face  
   - ./base:/home/face/base
-  - ./conf:/home/face
+  - ./logs:/home/face/logs
+  
